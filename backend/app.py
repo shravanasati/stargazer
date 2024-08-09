@@ -17,5 +17,10 @@ def assets(path):
     return send_from_directory(app.static_folder, path)
 
 
+@app.get("/ping")
+def ping():
+    return {"message": "pong"}
+
+
 if __name__ == "__main__":
     app.run()
