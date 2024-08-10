@@ -36,5 +36,10 @@ def potd():
     return nasa_client.potd()
 
 
+@app.get("/api/fireball_map")
+def fireball_map():
+    return {"html": nasa_client.fireball_map().read().decode("utf-8")}
+
+
 if __name__ == "__main__":
     app.run()

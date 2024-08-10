@@ -13,6 +13,7 @@ python-dotenv = "^1.0.1"
 nasapy = "^0.2.7"
 redis = {extras = ["hiredis"], version = "^5.0.8"}
 pandas = "^2.2.2"
+folium = "^0.17.0"
 
 
 [build-system]
