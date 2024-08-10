@@ -1,9 +1,23 @@
-import './App.css'
+"use client";
+import { SparklesCore } from "./components/ui/sparkles";
 
-function App() {
+export default function App() {
   return (
-    <p>hello world</p>
-  )
+    <div className="h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden rounded-md">
+      <div className="w-full absolute inset-0 h-screen">
+        <SparklesCore
+          id="tsparticlesfullpage"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.4}
+          particleDensity={100}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+        />
+      </div>
+      <h1 className="md:text-7xl text-3xl lg:text-6xl font-bold text-center text-white relative z-20">
+        Build great products
+      </h1>
+    </div>
+  );
 }
-
-export default App
