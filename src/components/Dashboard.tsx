@@ -3,6 +3,7 @@ import { POTD } from "./POTD";
 import { EventsBoard } from "./EventsBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { LaunchesBoard } from "./LaunchesBoard";
+import { ChatPanel } from "./ChatPanel";
 
 export default function Dashboard() {
   return (
@@ -15,6 +16,7 @@ export default function Dashboard() {
         <TabsTrigger value="fireball_map">Fireball Map</TabsTrigger>
         <TabsTrigger value="events">Events</TabsTrigger>
         <TabsTrigger value="launches">Launches</TabsTrigger>
+        <TabsTrigger value="chat">Chat</TabsTrigger>
       </TabsList>
       <TabsContent value="potd">
         <POTD />
@@ -27,6 +29,10 @@ export default function Dashboard() {
       </TabsContent>
       <TabsContent value="launches">
         <LaunchesBoard />
+      </TabsContent>
+
+      <TabsContent value="chat">
+        <ChatPanel />
       </TabsContent>
     </Tabs>
   );
