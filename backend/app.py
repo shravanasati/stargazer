@@ -29,6 +29,11 @@ def launches():
     return spacedevs_client.launches()
 
 
+@app.get("/news")
+def events():
+    return spacedevs_client.news()
+
+
 @app.get("/ping")
 def ping():
     return {"message": "pong"}
