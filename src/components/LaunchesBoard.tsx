@@ -7,7 +7,7 @@ export function LaunchesBoard() {
   const [element, setElement] = useState(Loading())
   useEffect(() => {
     const fetchLaunches = async () => {
-      const response = await fetch("http://localhost:5000/api/launches")
+      const response = await fetch("/api/launches")
       const data = await response.json()
       setElement(
         <HoverEffect items={data} />

@@ -6,7 +6,7 @@ export function POTD() {
   const [element, setElement] = useState(Loading())
   useEffect(() => {
     const fetchPOTD = async () => {
-      const response = await fetch("http://localhost:5000/api/potd")
+      const response = await fetch("/api/potd")
       const data = await response.json()
       setElement(
         <div>
