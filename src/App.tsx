@@ -23,16 +23,18 @@ export default function App() {
             particleColor="#cbd5e1"
           />
         </div>
-        <div className="text-zinc-50 w-4/5 h-screen z-50 flex flex-col justify-center items-center gap-4">
-          <h1 className="text-7xl p-2">Welcome to Stargazer</h1>
-          <p className="w-2/4 text-center">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Soluta
-            error eveniet maiores deleniti, assumenda, nihil est sed iusto
-            autem, quod similique nam eaque iste magnam temporibus accusamus
-            libero quis ad!
+        //! start
+        <div className="text-zinc-50 w-4/5 h-screen z-50 flex flex-col justify-center items-center gap-4 flex-wrap">
+          <h1 className="text-6xl md:text-7xl p-2 text-center w-full mb-4">
+            Welcome to Stargazer
+          </h1>
+          <p className="w-full md:w-1/2 text-center md:text-lg text-md text-slate-100/70">
+            Unveil the mysteries of the night sky with a dashboard designed for
+            dreamers and explorers. Your journey to the stars starts here.
           </p>
-          <CtaButton text="Hello Niggas" />
+          <CtaButton text="Dashboard" className="mt-4" />
         </div>
+        //! end
       </div>
       <Bento2c />
     </>
@@ -41,5 +43,11 @@ export default function App() {
 
 //! later
 export function CtaButton({ text, className }: Props) {
-  return <Button className={`${className} bg-[#10a4ea] `}>{text}</Button>;
+  return (
+    <Button
+      className={`${className}  hover:bg-zinc-800 text-xl p-6 shadow-2xl shadow-blue-500/50 hover:shadow-indigo-500/50 transition-all ease-in-out duration-500 hover:shadow-lg`}
+    >
+      {text}
+    </Button>
+  );
 }
