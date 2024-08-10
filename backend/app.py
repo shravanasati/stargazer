@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from flask import Flask, send_from_directory
 
@@ -30,17 +31,32 @@ def assets(path):
 
 @app.get("/api/events")
 def events():
-    return spacedevs_client.events()
+    try:
+        return spacedevs_client.events()
+    except Exception as e:
+        logging.error("error in events endpoint")
+        logging.exception(e)
+        return {"error": "an internal server error occured, please try again later"}
 
 
 @app.get("/api/launches")
 def launches():
-    return spacedevs_client.launches()
+    try:
+        return spacedevs_client.launches()
+    except Exception as e:
+        logging.error("error in events endpoint")
+        logging.exception(e)
+        return {"error": "an internal server error occured, please try again later"}
 
 
 @app.get("/api/news")
 def news():
-    return spacedevs_client.news()
+    try:
+        return spacedevs_client.news()
+    except Exception as e:
+        logging.error("error in events endpoint")
+        logging.exception(e)
+        return {"error": "an internal server error occured, please try again later"}
 
 
 @app.get("/api/ping")
@@ -50,7 +66,12 @@ def ping():
 
 @app.get("/api/potd")
 def potd():
-    return nasa_client.potd()
+    try:
+        return nasa_client.potd()
+    except Exception as e:
+        logging.error("error in events endpoint")
+        logging.exception(e)
+        return {"error": "an internal server error occured, please try again later"}
 
 
 @app.get("/api/fireball_map")
