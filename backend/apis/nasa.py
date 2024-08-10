@@ -43,7 +43,7 @@ class NasaAPI:
 
     def _fireballs(self):
         today = datetime.now().date()
-        last_month = today - timedelta(days=90)
+        last_month = today - timedelta(days=365)
         df = fireballs(date_min=str(last_month), return_df=True)
         df.dropna(inplace=True)
         df["lat"] = df["lat"].astype(float)
@@ -52,7 +52,7 @@ class NasaAPI:
         return df
 
     def fireball_map(self):
-        m = folium.Map(zoom_start=4)
+        m = folium.Map(zoom_start=7)
         fb = self._fireballs()
         for i in range(0, len(fb)):
             folium.Circle(
