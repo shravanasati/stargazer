@@ -6,7 +6,7 @@ export function FireballMap() {
   const [element, setElement] = useState(Loading())
   useEffect(() => {
     const fetchFireballMap = async () => {
-      const response = await fetch("http://localhost:5000/api/fireball_map")
+      const response = await fetch("/api/fireball_map")
       const data = await response.json()
       if (data.error) {
         setElement(

@@ -1,4 +1,6 @@
 "use client";
+
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import Bento2c from "./components/Bento2c";
 import { SparklesCore } from "./components/ui/sparkles";
 import { Button } from "@/components/ui/button";
@@ -6,6 +8,7 @@ import { Button } from "@/components/ui/button";
 type Props = {
   text: string;
   className?: string;
+  to: string; // Change href to to
 };
 
 export default function App() {
@@ -31,7 +34,7 @@ export default function App() {
             Unveil the mysteries of the night sky with a dashboard designed for
             dreamers and explorers. Your journey to the stars starts here.
           </p>
-          <CtaButton text="Dashboard" className="mt-4" />
+          <CtaButton text="Dashboard" to="/dashboard" className="mt-4" />
         </div>
       </div>
       <Bento2c />
@@ -39,12 +42,14 @@ export default function App() {
   );
 }
 
-export function CtaButton({ text, className }: Props) {
+export function CtaButton({ text, className, to }: Props) {
   return (
-    <Button
-      className={`${className}  hover:bg-zinc-800 text-xl p-6 shadow-2xl shadow-blue-500/50 hover:shadow-indigo-500/50 transition-all ease-in-out duration-500 hover:shadow-lg`}
-    >
-      {text}
-    </Button>
+    <Link to={to}>
+      <Button
+        className={`${className} hover:bg-zinc-800 text-xl p-6 shadow-2xl shadow-blue-500/50 hover:shadow-indigo-500/50 transition-all ease-in-out duration-500 hover:shadow-lg`}
+      >
+        {text}
+      </Button>
+    </Link>
   );
 }
