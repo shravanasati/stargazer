@@ -66,7 +66,7 @@ def launches():
     try:
         return spacedevs_client.launches()
     except Exception as e:
-        logging.error("error in events endpoint")
+        logging.error("error in launches endpoint")
         logging.exception(e)
         return {"error": "an internal server error occured, please try again later"}
 
@@ -76,7 +76,7 @@ def news():
     try:
         return spacedevs_client.news()
     except Exception as e:
-        logging.error("error in events endpoint")
+        logging.error("error in news endpoint")
         logging.exception(e)
         return {"error": "an internal server error occured, please try again later"}
 
@@ -91,7 +91,7 @@ def potd():
     try:
         return nasa_client.potd()
     except Exception as e:
-        logging.error("error in events endpoint")
+        logging.error("error in potd endpoint")
         logging.exception(e)
         return {"error": "an internal server error occured, please try again later"}
 
@@ -112,18 +112,34 @@ def chat_gemini():
         abort(400)
 
     if "chatID" in session:
-        pickled_chat = redis_client.get(session["chatID"])
+        chatID = session["chatID"]
+        pickled_chat = redis_client.get(chatID)
         if not pickled_chat:
             return {"message": "Your session has expired. Please try again later."}
         chat = pickle.loads(pickled_chat)
     else:
         chatID, chat = create_chat()
+        chat.history
 
     resp = chat.send_message(query)
     session["chatID"] = chatID
     pickled_chat = pickle.dumps(chat)
     redis_client.setex(chatID, HOUR_TIMEDELTA, pickled_chat)
     return {"message": resp}
+
+
+@app.get("/api/chat/list")
+def chat_history():
+    if "chatID" in session:
+        chatID = session["chatID"]
+        pickled_chat = redis_client.get(chatID)
+        if not pickled_chat:
+            return []
+
+        chat = pickle.loads(pickled_chat)
+        return chat.history
+
+    return []
 
 
 if __name__ == "__main__":
