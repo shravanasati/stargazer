@@ -16,6 +16,9 @@ def index():
 def assets(path):
     return send_from_directory(app.static_folder, path)
 
+@app.get("/events")
+def events():
+    pass
 
 @app.get("/ping")
 def ping():
