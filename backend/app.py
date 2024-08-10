@@ -1,22 +1,39 @@
+from datetime import timedelta
 import logging
+import os
 from pathlib import Path
-from flask import Flask, send_from_directory
+import pickle
+from flask import Flask, abort, request, send_from_directory, session
 
-from apis.cache import redis_close
+from dotenv import load_dotenv
+
+from apis.cache import redis_close, redis_conn
 from apis.nasa import NasaAPI
 from apis.spacedevs import SpacedevsAPI
+from apis.chatbot import create_chat
 
+load_dotenv()
+
+redis_client = redis_conn()
 app = Flask(__file__)
+app.secret_key = os.environ["SECRET_KEY"]
 dist_dir = Path(__file__).parent.parent / "dist"
 app.static_folder = str(dist_dir)
 assets_folder = str(dist_dir / "assets")
 nasa_client = NasaAPI()
 spacedevs_client = SpacedevsAPI()
+HOUR_TIMEDELTA = timedelta(hours=1)
 
 
 @app.teardown_appcontext
 def teardown_redis(exception):
     redis_close()
+
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = HOUR_TIMEDELTA
 
 
 @app.get("/")
@@ -27,6 +44,11 @@ def index():
 @app.get("/<path:path>")
 def assets(path):
     return send_from_directory(app.static_folder, path)
+
+
+@app.errorhandler(404)
+def not_found_handler():
+    return send_from_directory(app.static_folder, "index.html")
 
 
 @app.get("/api/events")
@@ -77,6 +99,31 @@ def potd():
 @app.get("/api/fireball_map")
 def fireball_map():
     return {"html": nasa_client.fireball_map().read().decode("utf-8")}
+
+
+@app.post("/api/chat/send")
+def chat_gemini():
+    rjson = request.get_json()
+    if not rjson:
+        abort(415)
+
+    query = rjson.get("message")
+    if not query:
+        abort(400)
+
+    if "chatID" in session:
+        pickled_chat = redis_client.get(session["chatID"])
+        if not pickled_chat:
+            return {"message": "Your session has expired. Please try again later."}
+        chat = pickle.loads(pickled_chat)
+    else:
+        chatID, chat = create_chat()
+
+    resp = chat.send_message(query)
+    session["chatID"] = chatID
+    pickled_chat = pickle.dumps(chat)
+    redis_client.setex(chatID, HOUR_TIMEDELTA, pickled_chat)
+    return {"message": resp}
 
 
 if __name__ == "__main__":

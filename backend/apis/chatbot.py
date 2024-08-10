@@ -1,0 +1,43 @@
+import google.generativeai as genai
+import os
+from uuid import uuid4
+
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+SYSTEM_MESSAGE = """
+You are a helpful chatbot for an astronomy dashboard website which provides users visualisations and news on space related stuff. Your tone will be enthusiastic and as factual as possible. If you encounter a question outside this domain, respond with "That is beyond my knowledge.".
+""".strip()
+
+
+safety_settings = [
+    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+    {
+        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+    },
+    {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+    },
+]
+config = {"temperature": 0, "top_k": 20, "top_p": 0.9, "max_output_tokens": 500}
+
+model = genai.GenerativeModel(
+    "gemini-1.5-flash",
+    system_instruction=SYSTEM_MESSAGE,
+    safety_settings=safety_settings,
+    generation_config=config,
+)
+
+
+def create_chat():
+    chat = model.start_chat(
+        history=[
+            {"role": "user", "parts": "Hello"},
+            {
+                "role": "model",
+                "parts": "Great to meet you. What would you like to know?",
+            },
+        ]
+    )
+    return str(uuid4()), chat
