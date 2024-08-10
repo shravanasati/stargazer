@@ -38,41 +38,40 @@ export function BentoGridSecondDemo() {
           description={item.description}
           header={item.header}
           className={item.className}
-          icon={item.icon}
         />
       ))}
     </BentoGrid>
   );
 }
 const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl    [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2]  bg-transparent"></div>
+  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl    [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2]  bg-neutral-500"></div>
 );
 const items = [
   {
-    title: "The Dawn of Innovation",
-    description: "Explore the birth of groundbreaking ideas and inventions.",
+    title: "Interactive Fireball Map",
+    description: "Interactive global map which shows asteroids collisions over the last year",
     header: <Skeleton />,
     className: "md:col-span-2",
     icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
   },
   {
-    title: "The Digital Revolution",
-    description: "Dive into the transformative power of technology.",
+    title: "Event Details",
+    description: "Catch up with upcoming celestial events and important updates",
     header: <Skeleton />,
     className: "md:col-span-1",
     icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
   },
   {
-    title: "The Art of Design",
-    description: "Discover the beauty of thoughtful and functional design.",
+    title: "Chatbot",
+    description: "Your own astronomy assistant!",
     header: <Skeleton />,
     className: "md:col-span-1",
     icon: <IconSignature className="h-4 w-4 text-neutral-500" />,
   },
   {
-    title: "The Power of Communication",
+    title: "Launches",
     description:
-      "Understand the impact of effective communication in our lives.",
+      "Yes there are live countdown timer too!",
     header: <Skeleton />,
     className: "md:col-span-2",
     icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
