@@ -23,7 +23,6 @@ export default function App() {
             particleColor="#cbd5e1"
           />
         </div>
-        //! start
         <div className="text-zinc-50 w-4/5 h-screen z-50 flex flex-col justify-center items-center gap-4 flex-wrap">
           <h1 className="text-6xl md:text-7xl p-2 text-center w-full mb-4">
             Welcome to Stargazer
@@ -34,14 +33,12 @@ export default function App() {
           </p>
           <CtaButton text="Dashboard" className="mt-4" />
         </div>
-        //! end
       </div>
       <Bento2c />
     </>
   );
 }
 
-//! later
 export function CtaButton({ text, className }: Props) {
   return (
     <Button
