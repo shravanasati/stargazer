@@ -21,7 +21,7 @@ class SpacedevsAPI:
         launchlst = []
         
         for item in range(10):
-            launchlst.append({"name": response.json()['results'][item]['name'], "rocket": response.json()['results'][item]['rocket']['configuration']['name'], "time": response.json()['results'][item]['window_start']})
+            launchlst.append({"name": response.json()['results'][item]['name'], "time": response.json()['results'][item]['window_start']})
 
         return launchlst
     
