@@ -28,19 +28,29 @@ def assets(path):
     return send_from_directory(app.static_folder, path)
 
 
-@app.get("/events")
+@app.get("/api/events")
 def events():
     return spacedevs_client.events()
 
 
-@app.get("/launches")
+@app.get("/api/launches")
 def launches():
     return spacedevs_client.launches()
 
 
-@app.get("/ping")
+@app.get("/api/ping")
 def ping():
     return {"message": "pong"}
+
+
+@app.get("/api/potd")
+def potd():
+    return nasa_client.potd()
+
+
+@app.get("/api/fireball_map")
+def fireball_map():
+    return {"html": nasa_client.fireball_map().read().decode("utf-8")}
 
 
 if __name__ == "__main__":

@@ -1,6 +1,5 @@
 "use client";
 import { SparklesCore } from "./ui/sparkles";
-import { cn } from "../lib/utils";
 import { BentoGrid, BentoGridItem } from "./ui/bento-grid";
 import {
   IconClipboardCopy,
