@@ -75,6 +75,9 @@ class NasaAPI:
         html_buf.seek(0)
         return html_buf
 
+    def weather(self):
+        return self.nasa.mars_weather()
+
 
 if __name__ == "__main__":
     print(NasaAPI()._fireballs())

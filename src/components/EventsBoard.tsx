@@ -9,13 +9,13 @@ export function EventsBoard() {
       const data = await response.json()
       setElement(
         <div className="m-2 p-2">
-          {data.map((entry: any) => {
+          {data.map((entry: any, idx: number) => {
             return (
-              <>
-              <h2 className="text-3xl my-4 font-bold text-black">{entry.name}</h2>
-              <img src={entry.image} alt={entry.name} className="w-80 h-80" />
-              <p className="text-black">{entry.description}</p>
-              </>
+              <div key={idx}>
+                <h2 className="text-3xl my-4 font-bold text-white">{entry.name}</h2>
+                <img src={entry.image} alt={entry.name} className="w-80 h-80" />
+                <p className="text-white">{entry.description}</p>
+              </div>
             )
           })}
         </div>
