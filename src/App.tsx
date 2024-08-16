@@ -1,20 +1,20 @@
 "use client";
 
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import Bento2c from "./components/Bento2c";
 import { SparklesCore } from "./components/ui/sparkles";
 import { Button } from "@/components/ui/button";
+import Bento2c from "./components/Bento2c";
 
 type Props = {
   text: string;
   className?: string;
-  to: string; 
+  to: string;
 };
 
 export default function App() {
   return (
     <>
-      <div className="h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden">
+      <section className="h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden">
         <div className="w-full h-screen absolute inset-0">
           <SparklesCore
             id="tsparticlesfullpage"
@@ -27,16 +27,17 @@ export default function App() {
           />
         </div>
         <div className="text-zinc-100 w-full h-screen z-50 flex flex-col justify-center items-center gap-2 flex-wrap">
-          <h1 className="text-7xl p-6 text-center w-full font-black md:p-0">
+          <h1 className="text-6xl md:text-7xl p-6 text-center w-full font-black md:p-0">
             Welcome to Stargazer
           </h1>
-          <p className="w-full md:w-1/2 text-center md:text-lg text-xl text-slate-100/70 font-light opacity-90 ">
+          <p className="w-4/5 md:w-1/2 text-center md:text-lg text-xl text-slate-100/70 font-light">
             Unveil the mysteries of the night sky with a dashboard designed for
             dreamers and explorers. Your journey to the stars starts here.
           </p>
           <CtaButton text="Dashboard" to="/dashboard" className="mt-4" />
         </div>
-      </div>
+      </section>
+      
       <Bento2c />
     </>
   );
