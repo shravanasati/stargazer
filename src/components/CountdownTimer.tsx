@@ -8,7 +8,7 @@ const DAY = HOUR * 24;
 
 const ShiftingCountdown = ({ from_date }: { from_date: string }) => {
   return (
-    <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-4">
+    <div>
       <div className="mx-auto flex max-w-3xl items-center bg-white">
         <CountdownItem unit="Day" text="days" from_datetime={from_date} />
         <CountdownItem unit="Hour" text="hours" from_datetime={from_date} />
