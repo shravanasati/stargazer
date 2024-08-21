@@ -1,21 +1,15 @@
 "use client";
-import { SparklesCore } from "./ui/sparkles";
 import { BentoGrid, BentoGridItem } from "./ui/bento-grid";
+import { ShootingStars } from "@/components/ui/shooting-stars";
+import { StarsBackground } from "@/components/ui/stars-background";
 
 export default function Bento2c() {
   return (
     <>
       <section className="h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden">
         <div className="w-full h-screen absolute inset-0">
-          <SparklesCore
-            id="bentoparticles"
-            background="transparent"
-            minSize={0.6}
-            maxSize={1.4}
-            particleDensity={50}
-            className="w-full h-full"
-            particleColor="#cbd5e1"
-          />
+          <ShootingStars />
+          <StarsBackground />
         </div>
         <div className="text-zinc-100 w-full h-screen z-50 flex flex-col justify-center items-center gap-2 flex-wrap md:p-0 p-2">
           <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
