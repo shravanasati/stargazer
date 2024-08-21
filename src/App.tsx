@@ -17,8 +17,8 @@ export default function App() {
     <>
       <section className="h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden">
         <div className="w-full h-screen absolute inset-0">
-        <ShootingStars />
-        <StarsBackground />
+          <ShootingStars />
+          <StarsBackground />
         </div>
         <div className="text-zinc-100 w-full h-screen z-50 flex flex-col justify-center items-center gap-2 flex-wrap">
           <h1 className="text-6xl md:text-7xl p-6 text-center w-full font-black md:p-0">
@@ -31,7 +31,7 @@ export default function App() {
           <CtaButton text="Dashboard" to="/dashboard" className="mt-4" />
         </div>
       </section>
-      
+
       <Bento2c />
     </>
   );
