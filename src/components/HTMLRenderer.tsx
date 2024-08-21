@@ -15,9 +15,11 @@ export default function HTMLRenderer({ htmlCode }: { htmlCode: string }) {
 	}, [htmlCode]);
 
 	return (
-		<iframe
-			ref={iframeRef}
-			style={{ width: '100%', height: '100vh', border: 'none' }}
-		/>
+		<div className="h-[80vh] w-[80vw]">
+			<iframe
+				ref={iframeRef}
+				className="h-full w-full"
+			/>
+		</div>
 	);
 }
