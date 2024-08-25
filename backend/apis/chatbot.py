@@ -30,14 +30,8 @@ model = genai.GenerativeModel(
 )
 
 
-def create_chat():
-    chat = model.start_chat(
-        history=[
-            {"role": "user", "parts": "Hello"},
-            {
-                "role": "model",
-                "parts": "Great to meet you. What would you like to know?",
-            },
-        ]
-    )
+def create_chat(history: list[dict[str, str]] | None = None):
+    if history is None:
+        history = []
+    chat = model.start_chat(history=history)
     return str(uuid4()), chat
