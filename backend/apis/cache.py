@@ -14,7 +14,7 @@ def redis_conn():
             host=os.environ["REDIS_HOST"],
             port=int(os.environ["REDIS_PORT"]),
             password=os.environ["REDIS_PASSWORD"],
-            # decode_responses=True,
+            decode_responses=True,
         )
 
     __redis_client.ping()

@@ -117,7 +117,10 @@ def chat_gemini():
         # print("found chatID in session")
         chatID = session["chatID"]
         # print(f"{chatID=}")
-        pickled_chat_history = redis_client.get(chatID)
+        try:
+            pickled_chat_history = redis_client.get(chatID)
+        except UnicodeDecodeError as e:
+            pickled_chat_history = e.object
         if not pickled_chat_history:
             return {"message": "Your session has expired. Please try again later."}
         chat_history = pickle.loads(pickled_chat_history)
@@ -138,11 +141,13 @@ def chat_gemini():
 def chat_history_list():
     if "chatID" in session:
         chatID = session["chatID"]
-        pickled_chat_history = redis_client.get(chatID)
+        try:
+            pickled_chat_history = redis_client.get(chatID)
+        except UnicodeDecodeError as e:
+            pickled_chat_history = e.object
         if not pickled_chat_history:
             return []
         chat_history = pickle.loads(pickled_chat_history)
-        print(type(chat_history[0].parts[0].text))
         return [
             {"role": message.role, "message": " ".join([p.text for p in message.parts])}
             for message in chat_history
