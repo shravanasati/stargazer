@@ -10,7 +10,7 @@ export function POTD() {
       const data = await response.json()
       setElement(
         <div>
-          <h2 className="text-3xl my-4 font-bold text-black">{data.title}</h2>
+          <h2 className="text-3xl my-4 font-bold text-white">{data.title}</h2>
 
           <img src={data.url} alt={data.title} className="w-80 h-80" />
 
@@ -18,7 +18,7 @@ export function POTD() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Description</AccordionTrigger>
               <AccordionContent>
-                <p className="text-black">{data.description}</p>
+                <p className="text-white">{data.description}</p>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

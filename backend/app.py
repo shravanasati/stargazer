@@ -47,7 +47,7 @@ def assets(path):
 
 
 @app.errorhandler(404)
-def not_found_handler():
+def not_found_handler(exc):
     return send_from_directory(app.static_folder, "index.html")
 
 
@@ -111,33 +111,42 @@ def chat_gemini():
     if not query:
         abort(400)
 
-    if "chatID" in session:
-        chatID = session["chatID"]
-        pickled_chat = redis_client.get(chatID)
-        if not pickled_chat:
-            return {"message": "Your session has expired. Please try again later."}
-        chat = pickle.loads(pickled_chat)
-    else:
-        chatID, chat = create_chat()
-        chat.history
+    # print(f"{query=}")
 
-    resp = chat.send_message(query)
+    if "chatID" in session:
+        # print("found chatID in session")
+        chatID = session["chatID"]
+        # print(f"{chatID=}")
+        pickled_chat_history = redis_client.get(chatID)
+        if not pickled_chat_history:
+            return {"message": "Your session has expired. Please try again later."}
+        chat_history = pickle.loads(pickled_chat_history)
+        # print(f"{chat_history=}")
+        _, chat = create_chat(chat_history)
+    else:
+        # print("creating new chat instance")
+        chatID, chat = create_chat()
+
+    resp = chat.send_message(query).text
+    # print(f"{resp=}")
     session["chatID"] = chatID
-    pickled_chat = pickle.dumps(chat)
-    redis_client.setex(chatID, HOUR_TIMEDELTA, pickled_chat)
+    redis_client.setex(chatID, HOUR_TIMEDELTA, pickle.dumps(chat.history))
     return {"message": resp}
 
 
 @app.get("/api/chat/list")
-def chat_history():
+def chat_history_list():
     if "chatID" in session:
         chatID = session["chatID"]
-        pickled_chat = redis_client.get(chatID)
-        if not pickled_chat:
+        pickled_chat_history = redis_client.get(chatID)
+        if not pickled_chat_history:
             return []
-
-        chat = pickle.loads(pickled_chat)
-        return chat.history
+        chat_history = pickle.loads(pickled_chat_history)
+        print(type(chat_history[0].parts[0].text))
+        return [
+            {"role": message.role, "message": " ".join([p.text for p in message.parts])}
+            for message in chat_history
+        ]
 
     return []
 
