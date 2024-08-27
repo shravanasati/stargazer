@@ -5,6 +5,7 @@ import logging
 import os
 import folium
 from nasapy import Nasa, fireballs
+import pandas as pd
 from .cache import redis_conn
 from dotenv import load_dotenv
 
@@ -44,6 +45,9 @@ class NasaAPI:
             return {"error": "Unable to load the picture of the day."}
 
     def _fireballs(self):
+        if resp := self.redis.get("NASA_FIREBALLS"):
+            return pd.DataFrame.from_dict(json.loads(resp))
+
         today = datetime.now().date()
         last_month = today - timedelta(days=365)
         df = fireballs(date_min=str(last_month), return_df=True)
@@ -51,6 +55,8 @@ class NasaAPI:
         df["lat"] = df["lat"].astype(float)
         df["lon"] = df["lon"].astype(float)
         df["energy"] = df["energy"].astype(float)
+
+        self.redis.setex("NASA_FIREBALLS", timedelta(hours=1), df.to_json())
         return df
 
     def fireball_map(self):

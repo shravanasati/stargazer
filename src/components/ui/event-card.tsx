@@ -9,9 +9,8 @@ export const HoverEffectEvent = ({
 }: {
   items: {
     name: string;
-    // time: string;
-    imgSrc: string;
-    imgAlt: string;
+    image: string;
+    description: string;
   }[];
   className?: string;
 }) => {
@@ -50,9 +49,13 @@ export const HoverEffectEvent = ({
           </AnimatePresence>
           <Card>
             <CardTitle>{item.name}</CardTitle>
-            {/* <CardDescription><ShiftingCountdown from_date={item.time} /></CardDescription> */}
             <CardDescription>
-              <img src={item.imgSrc} alt={item.imgAlt} height="64px" width="25%"/>
+              <div>
+                <img src={item.image} alt={item.name} className="m-2" />
+                <p>
+                  {item.description}
+                </p>
+              </div>
             </CardDescription>
           </Card>
         </a>
