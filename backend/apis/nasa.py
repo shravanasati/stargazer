@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from io import BytesIO
+import json
 import logging
 import os
 import folium
@@ -20,8 +21,8 @@ class NasaAPI:
         Return the picture of the day.
         """
         try:
-            if resp := self.redis.hgetall("NASA_POTD"):
-                return resp
+            if resp := self.redis.get("NASA_POTD"):
+                return json.loads(resp)
 
             resp = self.nasa.picture_of_the_day(hd=True)
             mapping = {
@@ -30,9 +31,10 @@ class NasaAPI:
                 "url": resp["url"],
                 "description": resp["explanation"],
             }
-            self.redis.hset(
+            self.redis.setex(
                 "NASA_POTD",
-                mapping=mapping,
+                timedelta(hours=1),
+                json.dumps(mapping),
             )
             return resp
 
