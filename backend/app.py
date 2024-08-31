@@ -6,6 +6,7 @@ import pickle
 from flask import Flask, abort, request, send_from_directory, session
 
 from dotenv import load_dotenv
+from google.generativeai.types.generation_types import StopCandidateException
 
 from apis.cache import redis_close, redis_conn
 from apis.nasa import NasaAPI
@@ -44,11 +45,6 @@ def index():
 @app.get("/<path:path>")
 def assets(path):
     return send_from_directory(app.static_folder, path)
-
-
-@app.errorhandler(404)
-def not_found_handler(exc):
-    return send_from_directory(app.static_folder, "index.html")
 
 
 @app.get("/api/events")
@@ -103,38 +99,46 @@ def fireball_map():
 
 @app.post("/api/chat/send")
 def chat_gemini():
-    rjson = request.get_json()
-    if not rjson:
-        abort(415)
+    try:
+        rjson = request.get_json()
+        if not rjson:
+            abort(415)
 
-    query = rjson.get("message")
-    if not query:
-        abort(400)
+        query = rjson.get("message")
+        if not query:
+            abort(400)
 
-    # print(f"{query=}")
+        # print(f"{query=}")
 
-    if "chatID" in session:
-        # print("found chatID in session")
-        chatID = session["chatID"]
-        # print(f"{chatID=}")
-        try:
-            pickled_chat_history = redis_client.get(chatID)
-        except UnicodeDecodeError as e:
-            pickled_chat_history = e.object
-        if not pickled_chat_history:
-            return {"message": "Your session has expired. Please try again later."}
-        chat_history = pickle.loads(pickled_chat_history)
-        # print(f"{chat_history=}")
-        _, chat = create_chat(chat_history)
-    else:
-        # print("creating new chat instance")
-        chatID, chat = create_chat()
+        if "chatID" in session:
+            # print("found chatID in session")
+            chatID = session["chatID"]
+            # print(f"{chatID=}")
+            try:
+                pickled_chat_history = redis_client.get(chatID)
+            except UnicodeDecodeError as e:
+                pickled_chat_history = e.object
+            if not pickled_chat_history:
+                return {"message": "Your session has expired. Please try again later."}
+            chat_history = pickle.loads(pickled_chat_history)
+            # print(f"{chat_history=}")
+            _, chat = create_chat(chat_history)
+        else:
+            # print("creating new chat instance")
+            chatID, chat = create_chat()
 
-    resp = chat.send_message(query).text
-    # print(f"{resp=}")
-    session["chatID"] = chatID
-    redis_client.setex(chatID, HOUR_TIMEDELTA, pickle.dumps(chat.history))
-    return {"message": resp}
+        resp = chat.send_message(query).text
+        # print(f"{resp=}")
+        session["chatID"] = chatID
+        redis_client.setex(chatID, HOUR_TIMEDELTA, pickle.dumps(chat.history))
+        return {"message": resp}
+
+    except StopCandidateException:
+        return {"message": "I cannot answer that."}
+
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "It seems we're out of service at the moment, try again later."}
 
 
 @app.get("/api/chat/list")
@@ -149,7 +153,7 @@ def chat_history_list():
             return []
         chat_history = pickle.loads(pickled_chat_history)
         return [
-            {"role": message.role, "message": " ".join([p.text for p in message.parts])}
+            {"role": message.role, "content": " ".join([p.text for p in message.parts])}
             for message in chat_history
         ]
 

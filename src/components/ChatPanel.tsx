@@ -1,83 +1,102 @@
-import { useState } from 'react';
-import { SendHorizonal } from 'lucide-react';
-import { Input, MessageList } from 'react-chat-elements';
-import 'react-chat-elements/dist/main.css';
+import { ChangeEvent, useEffect, useRef, useState } from "react"
+import "./ChatPanel.css"
+import { LoaderCircle } from "lucide-react";
+
+type Message = {
+  role: "user" | "model";
+  content: string;
+}
+
+type SendChatResp = {
+  message: string;
+}
 
 export function ChatPanel() {
-  const [messages, setMessages] = useState<{ position: string; type: string; text: string; date: Date; }[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [isSending, setIsSending] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false)
 
-  const handleSend = async () => {
-    if (inputValue.trim() === '') return;
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
 
-    const userMessage = {
-      position: 'right',
-      type: 'text',
-      text: inputValue,
-      date: new Date(),
-    };
+  useEffect(scrollToBottom, [messages])
 
-    setMessages([...messages, userMessage]);
-    setInputValue('');
-    setIsSending(true);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const sendMessage = async () => {
+    if (input.trim() === '') return;
+
+    const newMessage: Message = { content: input, role: 'user' };
+    setMessages([...messages, newMessage]);
+    setInput('');
 
     try {
-      const response = await fetch('/api/chat/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify({ message: inputValue }),
-      });
+      setLoading(true)
+      const response = await fetch(
+        "/api/chat/send",
+        {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({
+            "message": input
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      const jsonResp: SendChatResp = await response.json();
 
-      const data = await response.json();
-      const botMessage = {
-        position: 'left',
-        type: 'text',
-        text: data.message,
-        date: new Date(),
-      };
+      const botMessage: Message = {role: "model", content: jsonResp.message}
+      setMessages(prevMessages => [...prevMessages, botMessage]);
 
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
+      // Handle error (e.g., show an error message to the user)
     } finally {
-      setIsSending(false);
+      setLoading(false)
     }
   };
 
+  useEffect(() => {
+    const getChat = async () => {
+      try {
+        const resp = await fetch("/api/chat/list", {method: "GET", credentials: "include"})
+        const jsonResp: Message[] = await resp.json()
+
+        setMessages(jsonResp)
+        
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    getChat()
+  }, [])
+
   return (
-    <div className="flex flex-col">
-      <div className="flex-1 overflow-y-auto p-4">
-        <MessageList
-          className="message-list"
-          lockable={true}
-          toBottomHeight={'100%'}
-          // @ts-ignore
-          dataSource={messages}
-        />
+    <div className="chatbot">
+      <div className="chat-messages">
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.role}`}>
+            {message.content}
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
-      <div className="p-2 m-4">
-        <Input
-          value={inputValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
-          onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter' && !isSending) {
-              handleSend();
-            }
-          }}
-          maxHeight={200}
-          minHeight={35}
-          placeholder="Type here..."
-          // className="p-2 m-4 w-screen"
-          rightButtons={
-            <button onClick={handleSend} disabled={isSending}>
-              <SendHorizonal size={18} color="#000" />
-            </button>
-          }
+      <div className="chat-input">
+        <input
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+          placeholder="Type a message..."
         />
+        <button onClick={sendMessage} disabled={loading}>{loading ? <LoaderCircle className="animate-spin" /> :  "Send"}</button>
       </div>
     </div>
   );
