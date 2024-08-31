@@ -149,7 +149,7 @@ def chat_history_list():
             return []
         chat_history = pickle.loads(pickled_chat_history)
         return [
-            {"role": message.role, "message": " ".join([p.text for p in message.parts])}
+            {"role": message.role, "content": " ".join([p.text for p in message.parts])}
             for message in chat_history
         ]
 
