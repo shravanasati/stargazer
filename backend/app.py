@@ -47,11 +47,6 @@ def assets(path):
     return send_from_directory(app.static_folder, path)
 
 
-@app.errorhandler(404)
-def not_found_handler(exc):
-    return send_from_directory(app.static_folder, "index.html")
-
-
 @app.get("/api/events")
 def events():
     try:
