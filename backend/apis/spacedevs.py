@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 import json
 from .cache import redis_conn
 import requests
@@ -33,15 +33,20 @@ class SpacedevsAPI:
         if resp := self.redis.get("SPACEDEVS_LAUNCHES"):
             return json.loads(resp)
 
-        response = requests.get(url=f"{self.base_url}/2.2.0/launch/")
+        response = requests.get(url=f"{self.base_url}/2.2.0/launch/upcoming")
         results = response.json()["results"]
         launchlst = []
 
+        current_time = datetime.now(timezone.utc)
         for item in range(len(results)):
+            launch_time = results[item]["window_start"]
+            if datetime.fromisoformat(launch_time) < current_time:
+                continue
+
             launchlst.append(
                 {
                     "name": results[item]["name"],
-                    "time": results[item]["window_start"],
+                    "time": launch_time,
                 }
             )
 
