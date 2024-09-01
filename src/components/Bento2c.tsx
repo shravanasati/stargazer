@@ -59,7 +59,7 @@ const items = [
     className: "md:col-span-1",
   },
   {
-    title: "Count down to the launches",
+    title: "T-3, T-2, T-1, ...",
     description: "That rocket is launching sooooon.",
     header: (
       <HeaderImage source="/launches_demo.png" />

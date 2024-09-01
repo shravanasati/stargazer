@@ -1,13 +1,15 @@
-from datetime import datetime, timedelta
-from io import BytesIO
 import json
 import logging
 import os
+from datetime import datetime, timedelta
+from io import BytesIO
+
 import folium
-from nasapy import Nasa, fireballs
 import pandas as pd
-from .cache import redis_conn
 from dotenv import load_dotenv
+from nasapy import Nasa, fireballs
+
+from .cache import redis_conn
 
 load_dotenv()
 

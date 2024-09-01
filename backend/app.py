@@ -1,17 +1,16 @@
-from datetime import timedelta
 import logging
 import os
-from pathlib import Path
 import pickle
-from flask import Flask, abort, request, send_from_directory, session
-
-from dotenv import load_dotenv
-from google.generativeai.types.generation_types import StopCandidateException
+from datetime import timedelta
+from pathlib import Path
 
 from apis.cache import redis_close, redis_conn
+from apis.chatbot import create_chat
 from apis.nasa import NasaAPI
 from apis.spacedevs import SpacedevsAPI
-from apis.chatbot import create_chat
+from dotenv import load_dotenv
+from flask import Flask, abort, request, send_from_directory, session
+from google.generativeai.types.generation_types import StopCandidateException
 
 load_dotenv()
 
@@ -35,6 +34,7 @@ def teardown_redis(exception):
 def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = HOUR_TIMEDELTA
+
 
 @app.errorhandler(404)
 def not_found_handler(exc):
@@ -142,7 +142,9 @@ def chat_gemini():
 
     except Exception as e:
         logging.exception(e)
-        return {"message": "It seems we're out of service at the moment, try again later."}
+        return {
+            "message": "It seems we're out of service at the moment, try again later."
+        }
 
 
 @app.get("/api/chat/list")
