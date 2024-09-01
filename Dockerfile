@@ -1,5 +1,3 @@
-#! this dockerfile must be built from the project root
-
 FROM node:22-slim AS frontend-build
 
 ENV PNPM_HOME="/pnpm"

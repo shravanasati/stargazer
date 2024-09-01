@@ -6,5 +6,5 @@ version: '3'
 tasks:
   dockerfile:
     cmds:
-      - docker build -f ./backend/Dockerfile -t shravanasati/stargazer .
+      - docker build -t shravanasati/stargazer .
     silent: false
