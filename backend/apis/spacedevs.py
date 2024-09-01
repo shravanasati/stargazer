@@ -1,7 +1,9 @@
-from datetime import datetime, timedelta, timezone
 import json
-from .cache import redis_conn
+from datetime import datetime, timedelta, timezone
+
 import requests
+
+from .cache import redis_conn
 
 
 class SpacedevsAPI:
@@ -72,9 +74,7 @@ class SpacedevsAPI:
                 }
             )
 
-        self.redis.setex(
-            "SPACEDEVS_NEWS", timedelta(hours=1), json.dumps(newslst)
-        )
+        self.redis.setex("SPACEDEVS_NEWS", timedelta(hours=1), json.dumps(newslst))
         return newslst
 
 
