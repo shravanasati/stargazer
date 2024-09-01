@@ -36,6 +36,10 @@ def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = HOUR_TIMEDELTA
 
+@app.errorhandler(404)
+def not_found_handler(exc):
+    return send_from_directory(app.static_folder, "index.html")
+
 
 @app.get("/")
 def index():
