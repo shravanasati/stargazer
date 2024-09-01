@@ -33,7 +33,6 @@ FROM python:3.12-slim AS runner
 
 COPY --from=backend-build /app /app
 COPY --from=frontend-build /app/dist /dist
-COPY ./backend/.env ./.env
 
 ENV PYTHONUNBUFFERED="true"
 
