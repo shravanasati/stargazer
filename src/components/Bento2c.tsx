@@ -12,7 +12,10 @@ export default function Bento2c() {
           <StarsBackground />
         </div>
         <div className="text-zinc-100 w-full h-screen z-50 flex flex-col justify-center items-center gap-2 flex-wrap md:p-0 p-2">
-          <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
+          <h1 className="text-3xl md:text-5xl p-4 text-center font-black md:p-0">
+            Features
+          </h1>
+          <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem] m-2">
             {items.map((item, i) => (
               <BentoGridItem
                 key={i}
@@ -40,34 +43,34 @@ const HeaderImage = ({ source }: HeaderImageProps) => (
 );
 const items = [
   {
-    title: "Grid Item 1",
-    description: "Description for the item 1.",
+    title: "Interactive Fireball Map",
+    description: "Visualize where the asteroids have fallen upon the Earth.",
     header: (
-      <HeaderImage source="https://i.pinimg.com/originals/bb/12/03/bb12038681429c0e313c3001a973ef0f.jpg" />
+      <HeaderImage source="/fireball_map_demo.png" />
     ),
     className: "md:col-span-2",
   },
   {
-    title: "Grid Item 2",
-    description: "Description for the item 2.",
+    title: "Be in the loop",
+    description: "Keep up with the latest astronomy events.",
     header: (
-      <HeaderImage source="https://i.pinimg.com/originals/bb/12/03/bb12038681429c0e313c3001a973ef0f.jpg" />
+      <HeaderImage source="/events_demo.png" />
     ),
     className: "md:col-span-1",
   },
   {
-    title: "Grid Item 3",
-    description: "Description for the item 3.",
+    title: "Count down to the launches",
+    description: "That rocket is launching sooooon.",
     header: (
-      <HeaderImage source="https://i.pinimg.com/originals/bb/12/03/bb12038681429c0e313c3001a973ef0f.jpg" />
+      <HeaderImage source="/launches_demo.png" />
     ),
     className: "md:col-span-1",
   },
   {
-    title: "Grid Item 4",
-    description: "Description for the item 4.",
+    title: "Intelligent chatbot",
+    description: "Ask anything you want to know about the night sky.",
     header: (
-      <HeaderImage source="https://i.pinimg.com/originals/bb/12/03/bb12038681429c0e313c3001a973ef0f.jpg" />
+      <HeaderImage source="/chatbot_demo.png" />
     ),
     className: "md:col-span-2",
   },
