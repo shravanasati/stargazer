@@ -1,7 +1,7 @@
 import logging
 import os
 import pickle
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from apis.cache import redis_close, redis_conn
@@ -30,7 +30,7 @@ limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["600/minute", "10/second"],
-    storage_uri="memory://"
+    storage_uri="memory://",
 )
 
 
@@ -48,6 +48,16 @@ def make_session_permanent():
 @app.errorhandler(404)
 def not_found_handler(exc):
     return send_from_directory(app.static_folder, "index.html")
+
+
+@app.errorhandler(429)
+def ratelimit_handler(exc):
+    now = datetime.now()
+    reset = datetime.fromtimestamp(limiter.current_limit.reset_at)
+    delta = (reset - now).seconds
+    return {
+        "error": f"rate limit exceeded, please try again after {delta} seconds"
+    }, 429
 
 
 @app.get("/")
@@ -112,7 +122,7 @@ def fireball_map():
 
 
 @app.post("/api/chat/send")
-@limiter.limit("1/5second")
+@limiter.limit("1/4second")
 def chat_gemini():
     try:
         rjson = request.get_json()

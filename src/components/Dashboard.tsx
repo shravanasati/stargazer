@@ -32,7 +32,7 @@ export default function Dashboard() {
               Chat
             </TabsTrigger>
           </TabsList>
-          <div className="bg-zinc-900 rounded-lg p-4 sm:p-6 lg:p-8 w-full">
+          <div className="w-full">
             <TabsContent value="potd">
               <POTD />
             </TabsContent>

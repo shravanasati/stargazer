@@ -9,7 +9,8 @@ type Message = {
 };
 
 type SendChatResp = {
-  message: string;
+  message?: string;
+  error?: string;
 }
 
 export function ChatPanel() {
@@ -49,7 +50,7 @@ export function ChatPanel() {
       })
       const jsonResp: SendChatResp = await response.json()
 
-      const botMessage: Message = { role: "model", content: jsonResp.message }
+      const botMessage: Message = { role: "model", content: jsonResp.message || jsonResp.error || "An unexpected error occured, please try again later."}
       setMessages((prevMessages) => [...prevMessages, botMessage])
     } catch (error) {
       console.error('Error sending message:', error);
