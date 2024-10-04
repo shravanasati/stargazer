@@ -17,6 +17,7 @@ folium = "^0.17.0"
 requests = "^2.32.3"
 google-generativeai = "^0.7.2"
 gunicorn = "^23.0.0"
+flask-limiter = "^3.8.0"
 
 [tool.poetry.group.dev]  # This part can be left out
 

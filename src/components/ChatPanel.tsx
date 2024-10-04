@@ -2,8 +2,6 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { LoaderCircle, Send } from "lucide-react";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
 
 type Message = {
   role: "user" | "model";
@@ -11,34 +9,35 @@ type Message = {
 };
 
 type SendChatResp = {
-  message: string;
-};
+  message?: string;
+  error?: string;
+}
 
 export function ChatPanel() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(false)
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   useEffect(scrollToBottom, [messages]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
+    setInput(e.target.value)
+  }
 
   const sendMessage = async () => {
     if (input.trim() === "") return;
 
-    const newMessage: Message = { content: input, role: "user" };
-    setMessages([...messages, newMessage]);
-    setInput("");
+    const newMessage: Message = { content: input, role: "user" }
+    setMessages([...messages, newMessage])
+    setInput("")
 
     try {
-      setLoading(true);
+      setLoading(true)
       const response = await fetch("/api/chat/send", {
         method: "POST",
         credentials: "include",
@@ -48,18 +47,18 @@ export function ChatPanel() {
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      const jsonResp: SendChatResp = await response.json();
+      })
+      const jsonResp: SendChatResp = await response.json()
 
-      const botMessage: Message = { role: "model", content: jsonResp.message };
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
+      const botMessage: Message = { role: "model", content: jsonResp.message || jsonResp.error || "An unexpected error occured, please try again later."}
+      setMessages((prevMessages) => [...prevMessages, botMessage])
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error('Error sending message:', error);
       // Handle error (e.g., show an error message to the user)
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
     const getChat = async () => {
@@ -70,7 +69,7 @@ export function ChatPanel() {
         });
         const jsonResp: Message[] = await resp.json();
 
-        setMessages(jsonResp);
+        setMessages(jsonResp)
       } catch (err) {
         console.error(err);
       }
@@ -80,56 +79,45 @@ export function ChatPanel() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-16rem)] bg-zinc-900 rounded-lg overflow-hidden">
-      <div className="flex-grow overflow-y-auto p-4 space-y-4">
+    <div className="flex flex-col h-[92vh] w-screen bg-gray-900 text-gray-100">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
+            className={`max-w-[80%] p-3 rounded-lg ${
+              message.role === "user"
+                ? "bg-blue-600 text-white ml-auto"
+                : "bg-gray-800 text-gray-100"
             }`}
           >
-            <div
-              className={`max-w-[70%] p-3 rounded-lg ${
-                message.role === "user"
-                  ? "bg-blue-600 text-white"
-                  : "bg-zinc-800 text-zinc-100"
-              }`}
-            >
-              {message.content}
-            </div>
+            {message.content}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <div className="p-4 bg-zinc-800">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            sendMessage();
-          }}
-          className="flex space-x-2"
-        >
-          <Input
+      <div className="p-4 bg-gray-800 border-t border-gray-700">
+        <div className="flex items-center space-x-2">
+          <input
             type="text"
             value={input}
             onChange={handleInputChange}
+            onKeyPress={(e) => e.key === "Enter" && sendMessage()}
             placeholder="Type a message..."
-            className="flex-grow bg-zinc-700 text-zinc-100 border-zinc-600 focus:ring-blue-500 focus:border-blue-500"
+            className="flex-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
           />
-          <Button
-            type="submit"
+          <button
+            onClick={sendMessage}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
-              <LoaderCircle className="animate-spin" />
+              <LoaderCircle className="w-5 h-5 animate-spin" />
             ) : (
-              <Send className="h-5 w-5" />
+              <Send className="w-5 h-5" />
             )}
-          </Button>
-        </form>
+          </button>
+        </div>
       </div>
     </div>
-  );
+  )
 }

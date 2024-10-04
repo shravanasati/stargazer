@@ -1,7 +1,7 @@
 import logging
 import os
 import pickle
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from apis.cache import redis_close, redis_conn
@@ -10,6 +10,8 @@ from apis.nasa import NasaAPI
 from apis.spacedevs import SpacedevsAPI
 from dotenv import load_dotenv
 from flask import Flask, abort, request, send_from_directory, session
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from google.generativeai.types.generation_types import StopCandidateException
 
 load_dotenv()
@@ -23,6 +25,13 @@ assets_folder = str(dist_dir / "assets")
 nasa_client = NasaAPI()
 spacedevs_client = SpacedevsAPI()
 HOUR_TIMEDELTA = timedelta(hours=1)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["600/minute", "10/second"],
+    storage_uri="memory://",
+)
 
 
 @app.teardown_appcontext
@@ -39,6 +48,16 @@ def make_session_permanent():
 @app.errorhandler(404)
 def not_found_handler(exc):
     return send_from_directory(app.static_folder, "index.html")
+
+
+@app.errorhandler(429)
+def ratelimit_handler(exc):
+    now = datetime.now()
+    reset = datetime.fromtimestamp(limiter.current_limit.reset_at)
+    delta = (reset - now).seconds
+    return {
+        "error": f"rate limit exceeded, please try again after {delta} seconds"
+    }, 429
 
 
 @app.get("/")
@@ -97,11 +116,13 @@ def potd():
 
 
 @app.get("/api/fireball_map")
+@limiter.limit("1/10second")
 def fireball_map():
     return {"html": nasa_client.fireball_map().read().decode("utf-8")}
 
 
 @app.post("/api/chat/send")
+@limiter.limit("1/4second")
 def chat_gemini():
     try:
         rjson = request.get_json()
