@@ -1,13 +1,15 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react"
-import { LoaderCircle, Send } from "lucide-react"
+"use client";
+
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { LoaderCircle, Send } from "lucide-react";
 
 type Message = {
-  role: "user" | "model"
-  content: string
-}
+  role: "user" | "model";
+  content: string;
+};
 
 type SendChatResp = {
-  message: string
+  message: string;
 }
 
 export function ChatPanel() {
@@ -20,14 +22,14 @@ export function ChatPanel() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  useEffect(scrollToBottom, [messages])
+  useEffect(scrollToBottom, [messages]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
   }
 
   const sendMessage = async () => {
-    if (input.trim() === "") return
+    if (input.trim() === "") return;
 
     const newMessage: Message = { content: input, role: "user" }
     setMessages([...messages, newMessage])
@@ -50,27 +52,30 @@ export function ChatPanel() {
       const botMessage: Message = { role: "model", content: jsonResp.message }
       setMessages((prevMessages) => [...prevMessages, botMessage])
     } catch (error) {
-      console.error("Error sending message:", error)
+      console.error('Error sending message:', error);
       // Handle error (e.g., show an error message to the user)
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     const getChat = async () => {
       try {
-        const resp = await fetch("/api/chat/list", { method: "GET", credentials: "include" })
-        const jsonResp: Message[] = await resp.json()
+        const resp = await fetch("/api/chat/list", {
+          method: "GET",
+          credentials: "include",
+        });
+        const jsonResp: Message[] = await resp.json();
 
         setMessages(jsonResp)
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
-    }
+    };
 
-    getChat()
-  }, [])
+    getChat();
+  }, []);
 
   return (
     <div className="flex flex-col h-[92vh] w-screen bg-gray-900 text-gray-100">

@@ -29,7 +29,7 @@ HOUR_TIMEDELTA = timedelta(hours=1)
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["60/minute", "1/second"],
+    default_limits=["600/minute", "10/second"],
     storage_uri="memory://"
 )
 
