@@ -84,7 +84,7 @@ export function ChatPanel() {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`max-w-[80%] p-3 rounded-lg ${
+            className={`max-w-[80%] p-3 m-2  rounded-lg ${
               message.role === "user"
                 ? "bg-blue-600 text-white ml-auto"
                 : "bg-gray-800 text-gray-100"
