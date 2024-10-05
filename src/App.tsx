@@ -9,7 +9,7 @@ import Bento2c from "./components/Bento2c";
 export default function App() {
   return (
     <>
-      <section className="min-h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden py-12 px-4">
+      <section className="min-h-screen relative w-full bg-zinc-950 flex flex-col items-center justify-center overflow-hidden py-8">
         <div className="absolute inset-0">
           <ShootingStars />
           <StarsBackground />

@@ -79,12 +79,12 @@ export function ChatPanel() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[92vh] w-screen bg-gray-900 text-gray-100">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex flex-col h-[92vh] w-[90vw] bg-gray-900 text-gray-100">
+      <div className="flex-1 overflow-y-auto space-y-4 rounded-xl">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`max-w-[80%] p-3 rounded-lg ${
+            className={`max-w-[80%] p-3 m-2  rounded-lg ${
               message.role === "user"
                 ? "bg-blue-600 text-white ml-auto"
                 : "bg-gray-800 text-gray-100"

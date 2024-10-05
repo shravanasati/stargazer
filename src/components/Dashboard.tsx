@@ -6,10 +6,11 @@ import { EventsBoard } from "./EventsBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { LaunchesBoard } from "./LaunchesBoard";
 import { ChatPanel } from "./ChatPanel";
+import { ConstellationMap } from "./ConstellationMap";
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 py-8">
       <div className="w-full max-w-7xl mx-auto">
         <Tabs defaultValue="potd" className="w-full flex flex-col items-center">
           <TabsList className="h-auto flex-wrap justify-center items-center mb-8">
@@ -31,6 +32,9 @@ export default function Dashboard() {
             <TabsTrigger value="chat" className="m-1 px-4 py-2 text-center">
               Chat
             </TabsTrigger>
+            <TabsTrigger value="constellation_map" className="m-1 px-4 py-2 text-center">
+              Constellation Map
+            </TabsTrigger>
           </TabsList>
           <div className="w-full">
             <TabsContent value="potd">
@@ -47,6 +51,9 @@ export default function Dashboard() {
             </TabsContent>
             <TabsContent value="chat">
               <ChatPanel />
+            </TabsContent>
+            <TabsContent value="constellation_map">
+              <ConstellationMap />
             </TabsContent>
           </div>
         </Tabs>
