@@ -7,13 +7,13 @@ export function ConstellationMap() {
 	useEffect(() => {
 		const fetchConstellationMap = async () => {
 			const response = await fetch("/constellation_map.html")
-      const htmlFile = await response.text()
+			const htmlFile = await response.text()
 			setElement(
 				<HTMLRenderer htmlCode={htmlFile} />
 			)
 		}
 
-		fetchConstellationMap()
+	fetchConstellationMap()
 	}, [])
 	return element
 }
