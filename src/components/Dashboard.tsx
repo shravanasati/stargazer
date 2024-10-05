@@ -9,7 +9,7 @@ import { ChatPanel } from "./ChatPanel";
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 py-8">
       <div className="w-full max-w-7xl mx-auto">
         <Tabs defaultValue="potd" className="w-full flex flex-col items-center">
           <TabsList className="h-auto flex-wrap justify-center items-center mb-8">

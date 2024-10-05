@@ -79,8 +79,8 @@ export function ChatPanel() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[92vh] w-screen bg-gray-900 text-gray-100">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex flex-col h-[92vh] w-[90vw] bg-gray-900 text-gray-100">
+      <div className="flex-1 overflow-y-auto space-y-4 rounded-xl">
         {messages.map((message, index) => (
           <div
             key={index}
