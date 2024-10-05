@@ -1,33 +1,59 @@
-import { useEffect, useState } from "react"
-import { Loading } from "./Loading"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
+import { useEffect, useState } from "react";
+import { Loading } from "./Loading";
 
 export function POTD() {
-  const [element, setElement] = useState(Loading())
+  const [element, setElement] = useState(Loading());
   useEffect(() => {
     const fetchPOTD = async () => {
-      const response = await fetch("/api/potd")
-      const data = await response.json()
+      const response = await fetch("/api/potd");
+      const data = await response.json();
       setElement(
-        <div>
-          <h2 className="text-3xl my-4 font-bold text-white">{data.title}</h2>
+        <>
+          <div className="grid grid-cols-2 grid-rows-10 gap-2 md:grid-cols-10 md:grid-rows-8 md:gap-2 size-full">
+            {/* !md and after */}
+            <div className="col-span-10 md:flex justify-center items-center md:visible hidden">
+              <h1 className="text-5xl py-4 px-6 font-extrabold">
+                {data.title}
+              </h1>
+            </div>
+            <div className="col-span-4 row-span-7 row-start-2 hidden md:visible  md:flex justify-center items-center p-2">
+              <img
+                src={data.url}
+                alt={data.title}
+                className="size-full object-cover"
+              />
+            </div>
 
-          <img src={data.url} alt={data.title} className="w-80 h-80" />
+            <div className="col-span-6 row-span-7 col-start-5 row-start-2 hidden md:visible md:flex justify-start items-start py-12 pl-2 pr-8 ml-4">
+              <p className="text-justify text-xl font-semibold">
+                {data.description}
+              </p>
+            </div>
+            {/* md and after */}
 
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>Description</AccordionTrigger>
-              <AccordionContent>
-                <p className="text-white">{data.description}</p>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+            {/* before md */}
+            <div className="col-span-2 md:hidden  visible flex justify-center items-center">
+              <h1 className="text-4xl p-2 font-bold truncate">{data.title}</h1>
+            </div>
+            <div className="col-span-2 row-span-4 row-start-2 md:hidden visible flex justify-center items-center p-2">
+              <img
+                src={data.url}
+                alt={data.title}
+                className="size-[96%] object-fill"
+              />
+            </div>
+            <div className="col-span-2 row-span-5 row-start-6 md:hidden visible flex justify-start items-start px-2 py-4 text-justify">
+              <p className="font-semibold px-3">
+               {data.description}
+              </p>
+            </div>
+            {/* before md */}
+          </div>
+        </>
+      );
+    };
 
-        </div>
-      )
-    }
-
-    fetchPOTD()
-  }, [])
-  return element
+    fetchPOTD();
+  }, []);
+  return element;
 }
