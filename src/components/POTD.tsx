@@ -44,20 +44,7 @@ export function POTD() {
             </div>
             <div className="col-span-2 row-span-5 row-start-6 md:hidden visible flex justify-start items-start px-2 py-4 text-justify">
               <p className="font-semibold px-3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sit
-                asperiores soluta, doloremque unde perspiciatis aspernatur a
-                voluptate commodi maiores assumenda, corrupti suscipit, aliquid
-                sint eligendi quaerat. Sunt odit illo perferendis soluta,
-                eveniet quis ipsum unde quae nam tenetur consectetur accusantium
-                at ad perspiciatis temporibus voluptatibus, eos quibusdam,
-                possimus ducimus deserunt labore laudantium dolor in incidunt.
-                Voluptates ullam atque veniam autem consequuntur deleniti
-                incidunt maxime est quia voluptate ex, error reprehenderit
-                possimus minus distinctio odio maiores repellat debitis
-                laudantium quibusdam eveniet ducimus recusandae? Amet atque quod
-                similique, facilis sapiente magni! Repellat id consectetur
-                soluta? Dignissimos voluptatibus rem similique quas eius
-                sapiente?
+               {data.description}
               </p>
             </div>
             {/* before md */}
