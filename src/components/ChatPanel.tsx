@@ -2,6 +2,9 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { LoaderCircle, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Message = {
   role: "user" | "model";
@@ -11,33 +14,33 @@ type Message = {
 type SendChatResp = {
   message?: string;
   error?: string;
-}
+};
 
 export function ChatPanel() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState("")
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [loading, setLoading] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(scrollToBottom, [messages]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value)
-  }
+    setInput(e.target.value);
+  };
 
   const sendMessage = async () => {
     if (input.trim() === "") return;
 
-    const newMessage: Message = { content: input, role: "user" }
-    setMessages([...messages, newMessage])
-    setInput("")
+    const newMessage: Message = { content: input, role: "user" };
+    setMessages([...messages, newMessage]);
+    setInput("");
 
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await fetch("/api/chat/send", {
         method: "POST",
         credentials: "include",
@@ -47,18 +50,24 @@ export function ChatPanel() {
         headers: {
           "Content-Type": "application/json",
         },
-      })
-      const jsonResp: SendChatResp = await response.json()
+      });
+      const jsonResp: SendChatResp = await response.json();
 
-      const botMessage: Message = { role: "model", content: jsonResp.message || jsonResp.error || "An unexpected error occured, please try again later."}
-      setMessages((prevMessages) => [...prevMessages, botMessage])
+      const botMessage: Message = {
+        role: "model",
+        content:
+          jsonResp.message ||
+          jsonResp.error ||
+          "An unexpected error occurred, please try again later.",
+      };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
       // Handle error (e.g., show an error message to the user)
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     const getChat = async () => {
@@ -69,7 +78,7 @@ export function ChatPanel() {
         });
         const jsonResp: Message[] = await resp.json();
 
-        setMessages(jsonResp)
+        setMessages(jsonResp);
       } catch (err) {
         console.error(err);
       }
@@ -79,45 +88,48 @@ export function ChatPanel() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[92vh] w-[90vw] bg-gray-900 text-gray-100">
-      <div className="flex-1 overflow-y-auto space-y-4 rounded-xl">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`max-w-[80%] p-3 m-2  rounded-lg ${
-              message.role === "user"
-                ? "bg-blue-600 text-white ml-auto"
-                : "bg-gray-800 text-gray-100"
-            }`}
-          >
-            {message.content}
-          </div>
-        ))}
+    <div className="flex flex-col h-[calc(100vh-12rem)] bg-zinc-900 rounded-lg overflow-hidden">
+      <ScrollArea className="flex-1 p-4">
+        <div className="space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`max-w-[80%] p-3 rounded-lg ${
+                message.role === "user"
+                  ? "bg-blue-600 text-zinc-100 ml-auto"
+                  : "bg-zinc-800 text-zinc-100"
+              }`}
+            >
+              {message.content}
+            </div>
+          ))}
+        </div>
         <div ref={messagesEndRef} />
-      </div>
-      <div className="p-4 bg-gray-800 border-t border-gray-700">
+      </ScrollArea>
+      <div className="p-4 bg-zinc-800 border-t border-zinc-700">
         <div className="flex items-center space-x-2">
-          <input
+          <Input
             type="text"
             value={input}
             onChange={handleInputChange}
             onKeyPress={(e) => e.key === "Enter" && sendMessage()}
             placeholder="Type a message..."
-            className="flex-1 p-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+            className="flex-1 bg-zinc-700 text-zinc-100 border-zinc-600 focus:ring-blue-500 placeholder-zinc-400"
           />
-          <button
+          <Button
             onClick={sendMessage}
             disabled={loading}
-            className="p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-blue-600 text-zinc-100 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-zinc-800"
           >
             {loading ? (
               <LoaderCircle className="w-5 h-5 animate-spin" />
             ) : (
               <Send className="w-5 h-5" />
             )}
-          </button>
+            <span className="sr-only">Send message</span>
+          </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

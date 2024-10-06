@@ -18,7 +18,7 @@ export default function Component() {
           <div className="text-zinc-100 flex flex-col justify-center items-center text-center md:w-1/2">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6">
               Welcome to Stargazer
-            </h1>
+            </h1> 
             <p className="text-base sm:text-lg md:text-xl text-slate-100/70 font-light mb-8 max-w-2xl">
               Unveil the mysteries of the night sky with a dashboard designed
               for dreamers and explorers. Your journey to the stars starts here.
