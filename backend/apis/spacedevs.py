@@ -24,6 +24,8 @@ class SpacedevsAPI:
                     "name": results[item]["name"],
                     "description": results[item]["description"],
                     "image": results[item]["feature_image"],
+                    "news_url": results[item]["news_url"],
+                    "video_url": results[item]["video_url"],
                 }
             )
 
