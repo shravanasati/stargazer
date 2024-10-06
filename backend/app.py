@@ -187,5 +187,24 @@ def chat_history_list():
     return []
 
 
+@app.post("/api/summarize")
+def summarize():
+    try:
+        rjson = request.get_json()
+        if not rjson:
+            abort(415)
+        url = rjson.get("url")
+        if not url:
+            abort(400)
+
+        _, chat = create_chat()
+        summ = chat.send_message(f"Please summarize this URL in 50 words: {url}").text
+        return {"summary": summ}
+
+    except Exception as e:
+        logging.exception(e)
+        return {"error": "an internal server error occured, try again later"}
+
+
 if __name__ == "__main__":
     app.run()
