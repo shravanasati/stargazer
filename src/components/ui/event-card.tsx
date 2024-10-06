@@ -28,11 +28,11 @@ export const HoverEffectEvent = ({
   className?: string
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [summarizing, setSummarizing] = useState<boolean>(false)
-  const [summary, setSummary] = useState<string>("")
+  const [summarizing, setSummarizing] = useState<number | null>(null)
+  const [summaries, setSummaries] = useState<string[]>(new Array(items.length).fill(""))
 
-  const handleSummarize = async (url: string) => {
-    setSummarizing(true)
+  const handleSummarize = async (url: string, index: number) => {
+    setSummarizing(index)
     try {
       const response = await fetch("/api/summarize", {
         method: "POST",
@@ -42,12 +42,20 @@ export const HoverEffectEvent = ({
         body: JSON.stringify({ url }),
       })
       const data = await response.json()
-      setSummary(data.summary)
+      setSummaries(prevSummaries => {
+        const newSummaries = [...prevSummaries]
+        newSummaries[index] = data.summary
+        return newSummaries
+      })
     } catch (error) {
       console.error("Error summarizing content:", error)
-      setSummary("Failed to summarize content. Please try again.")
+      setSummaries(prevSummaries => {
+        const newSummaries = [...prevSummaries]
+        newSummaries[index] = "Failed to summarize content. Please try again."
+        return newSummaries
+      })
     } finally {
-      setSummarizing(false)
+      setSummarizing(null)
     }
   }
 
@@ -115,18 +123,18 @@ export const HoverEffectEvent = ({
                           variant="outline"
                           size="sm"
                           className="ml-2"
-                          onClick={() => handleSummarize(item.news_url!)}
-                          disabled={summarizing}
+                          onClick={() => handleSummarize(item.news_url!, idx)}
+                          disabled={summarizing === idx}
                         >
                           <Sparkles className="w-4 h-4 mr-2" />
-                          {summarizing ? "Summarizing..." : "Summarize"}
+                          {summarizing === idx ? "Summarizing..." : "Summarize"}
                         </Button>
                       </div>
                     )}
-                    {summary && (
+                    {summaries[idx] && (
                       <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
                         <h4 className="font-semibold mb-2">Summary:</h4>
-                        <p>{summary}</p>
+                        <p>{summaries[idx]}</p>
                       </div>
                     )}
                     {item.video_url && (
