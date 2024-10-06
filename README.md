@@ -8,11 +8,12 @@ Access it here: https://stargazer-24dpp.ondigitalocean.app/
 
 The dashboard consists of:
 
-- NASA Picture of the Day
+- NASA Astronomy Picture of the Day
 - Interactive Fireball Map
 - Upcoming astronomy events
 - Upcoming shuttle launches
 - Chatbot
+- 3D Constellation Map
 
 
 # Setup Instructions
@@ -115,3 +116,6 @@ flask --app app run
 ```
 
 
+# References
+
+Special thanks to [celestial-js](https://github.com/ofrohn/d3-celestial/) for the constellation map, NASA and Spacedevs for the data.
