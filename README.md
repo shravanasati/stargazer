@@ -2,7 +2,7 @@
 
 A beautiful astronomy dashboard.
 
-Access it here: https://stargazer-24dpp.ondigitalocean.app/
+Access it here: https://stargazer-5q5fv.ondigitalocean.app/
 
 # Features
 
