@@ -186,7 +186,7 @@ def chat_history_list():
 
     return []
 
-
+@limiter.limit("1/5second")
 @app.post("/api/summarize")
 def summarize():
     try:
